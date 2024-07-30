@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Scholarships</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <header id="header-top" class="header-top">
+        <div class="header-top-left">
+            <img src="logo.png" alt="MeritMaze Logo" class="logo">
+        </div>
+        <div class="header-top-right">
+            <ul>
+                <li class="header-top-contact">
+                    Contact: +91 1234567890
+                </li>
+                <li class="header-top-contact">
+                    <a href="mailto:MeritMaze@gmail.com">Email: MeritMaze@gmail.com</a>
+                </li>
+                <li class="header-top-contact">
+                    <a href="login.html">Admin Login</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="additional-info-container">
+        <div class="form-container">
+            <div class="form-section">
+                <h2>Add a New Scholarship</h2>
+                <form id="add-scholarship-form" action="/add-scholarship" method="POST">
+                    <input type="hidden" id="username" name="username" value="">
+                    
+                    <label for="scholarship-name">Scholarship Name:</label>
+                    <input type="text" id="scholarship-name" name="name" required>
+                        
+                    <label for="description">Description</label>
+                    <input type="text" id="description" name="description" required>
+
+                    <label for="eligibility">Eligibility:</label>
+                    <input type="text" id="eligibility" name="eligibility" required>
+                    
+                    <label for="deadline">Deadline:</label>
+                    <input type="date" id="deadline" name="deadline" required>
+                    
+                    <label for="apply-link">Apply Link:</label>
+                    <input type="url" id="apply-link" name="link" required>
+                    
+                    <button type="submit">Add Scholarship</button>
+                </form>
+            </div>
+            
+            <div class="form-section">
+                
+                <h2>Delete an Existing Scholarship</h2>
+                <form id="delete-scholarship-form" action="/delete-scholarship" method="POST">
+                    <input type="hidden" id="username" name="username" value="">
+                    
+                    <label for="delete-scholarship-name">Scholarship Name:</label>
+                    <input type="text" id="delete-scholarship-name" name="name" required>
+                    
+                    <button type="submit">Delete Scholarship</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            if (username) {
+                document.getElementById('username').value = username;
+            }
+        });
+    </script>
+</body>
+</html>

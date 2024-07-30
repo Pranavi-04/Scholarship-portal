@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Approval - MeritMaze</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <header id="header-top" class="header-top">
+        <div class="header-top-left">
+            <img src="logo.png" alt="MeritMaze Logo" class="logo">
+        </div>
+        <div class="header-top-right">
+            <ul>
+                <li class="header-top-contact">
+                    Contact: +91 1234567890
+                </li>
+                <li class="header-top-contact">
+                    <a href="mailto:MeritMaze@gmail.com">Email: MeritMaze@gmail.com</a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <h2>Pending User Approvals</h2>
+        <div class="pending-users" id="pending-users">
+            <!-- List of pending users will be dynamically inserted here -->
+        </div>
+
+        <h2>All Registered Users</h2>
+        <div class="registered-users" id="registered-users">
+            <!-- List of registered users will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        async function fetchPendingUsers() {
+            const response = await fetch('/admin/pending-users');
+            const users = await response.json();
+            const usersContainer = document.getElementById('pending-users');
+            usersContainer.innerHTML = '';
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user';
+                userDiv.innerHTML = `
+                    <p>Username: ${user.username}</p>
+                    <p>Company: ${user.company}</p>
+                    <button onclick="approveUser('${user._id}')">Approve</button>
+                    <button onclick="denyUser('${user._id}')">Deny</button>
+                `;
+                usersContainer.appendChild(userDiv);
+            });
+        }
+
+        async function fetchRegisteredUsers() {
+            const response = await fetch('/admin/registered-users');
+            const users = await response.json();
+            const usersContainer = document.getElementById('registered-users');
+            usersContainer.innerHTML = '';
+            users.forEach(user => {
+                const userDiv = document.createElement('div');
+                userDiv.className = 'user';
+                userDiv.innerHTML = `
+                    <p>Username: ${user.username}</p>
+                    <p>Company: ${user.company}</p>
+                    <button onclick="cancelUser('${user._id}')">Cancel Registration</button>
+                `;
+                usersContainer.appendChild(userDiv);
+            });
+        }
+
+        async function approveUser(userId) {
+            const response = await fetch(`/admin/approve-user/${userId}`, { method: 'POST' });
+            if (response.ok) {
+                alert('User approved');
+                fetchPendingUsers();
+                fetchRegisteredUsers();
+            } else {
+                alert('Error approving user');
+            }
+        }
+
+        async function denyUser(userId) {
+            const response = await fetch(`/admin/deny-user/${userId}`, { method: 'POST' });
+            if (response.ok) {
+                alert('User denied');
+                fetchPendingUsers();
+            } else {
+                alert('Error denying user');
+            }
+        }
+
+        async function cancelUser(userId) {
+            const response = await fetch(`/admin/cancel-user/${userId}`, { method: 'POST' });
+            if (response.ok) {
+                alert('User registration cancelled');
+                fetchRegisteredUsers();
+            } else {
+                alert('Error cancelling user registration');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchPendingUsers();
+            fetchRegisteredUsers();
+        });
+    </script>
+</body>
+</html>
